@@ -1,4 +1,4 @@
-m = 51;     %Detta ska även testas för 51, 101
+m = 11;     %Detta ska även testas för 51, 101
 
 %   Givna kosntanter
 roh = 1;
@@ -31,7 +31,7 @@ h = domain_width/(m - 1);
 H = eye(m);
 H(1, 1) = 1/2;
 H(m, m) = 1/2;
-H = h*H;
+%H = h*H;
 
 H_bar = kron(eye(2), H);  %Kan strunta i C eftersom den blir ehnhetsmatris (2m x 2m) eftersom roh = c =1
 
@@ -73,8 +73,8 @@ Dm=HI*(Qm-1/2*e_1*e_1'+1/2*e_m*e_m') ;
 %%
 
 % Sätt ihop till M
-D_x = [0, Dp;
-    Dm, 0];
-M = -P*(D_x + D)*P;     % Struntar i C invers eftersom det blir enhetsmatrisen  
-M 
+D_x = [zeros(m), Dp;
+    Dm, zeros(m)];
+M = -P*(D_x)*P;     % Struntar i C invers eftersom det blir enhetsmatrisen, D-matrisen försvinner eftersom beta=0  
+
 
