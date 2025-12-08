@@ -28,10 +28,12 @@ L = [Ll;
 % Nedan högst oklart
 domain_width = 1;   %Detta är x_r - x_l
 h = domain_width/(m - 1);
-H = eye(m);
-H(1, 1) = 1/2;
-H(m, m) = 1/2;
+%H = eye(m);
+%H(1, 1) = 1/2;
+%H(m, m) = 1/2;
 %H = h*H;
+
+[H, HI, Dp, Dm, ~, ~] = SBP7_Upwind(m, h);
 
 H_bar = kron(eye(2), H);  %Kan strunta i C eftersom den blir ehnhetsmatris (2m x 2m) eftersom roh = c =1
 
@@ -39,11 +41,23 @@ H_bar = kron(eye(2), H);  %Kan strunta i C eftersom den blir ehnhetsmatris (2m x
 P = eye(2*m) - inv(H_bar)*transpose(L)*inv((L*inv(H_bar)*transpose(L)))*L;
 
 %%
-[H, HI, Dp, Dm, Qp, Qm] = SBP7_Upwind(m,h)
 
 % Sätt ihop till M
 D_x = [zeros(m), Dp;
     Dm, zeros(m)];
 M = -P*(D_x)*P;     % Struntar i C invers eftersom det blir enhetsmatrisen, D-matrisen försvinner eftersom beta=0  
+
+M_eigenvalues = eig(M);
+h_m_Meig = h*M_eigenvalues;
+figure;
+scatter(real(h_m_Meig), imag(h_m_Meig), 80, 'filled')
+grid on
+xlabel('Re')
+ylabel('Im')
+title('Eigenvalues of M times gridstep h')
+axis equal
+
+%%
+
 
 

@@ -48,4 +48,16 @@ D_x = [zeros(m), Dp;
 M = -P*(D_x)*P;     % Struntar i C invers eftersom det blir enhetsmatrisen, D-matrisen försvinner eftersom beta=0  
 
 M_eigenvalues = eig(M);
-plot()
+h_m_Meig = h*M_eigenvalues;
+figure;
+scatter(real(h_m_Meig), imag(h_m_Meig), 80, 'filled')
+grid on
+xlabel('Re')
+ylabel('Im')
+title('Eigenvalues of M times gridstep h')
+axis equal
+
+%%
+
+
+
