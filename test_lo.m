@@ -47,17 +47,39 @@ D_x = [zeros(m), Dp;
     Dm, zeros(m)];
 M = -P*(D_x)*P;     % Struntar i C invers eftersom det blir enhetsmatrisen, D-matrisen försvinner eftersom beta=0  
 
-M_eigenvalues = eig(M);
-h_m_Meig = h*M_eigenvalues;
+M_eig_char = eig(M);
+h_Meig_char = h*M_eig_char;
 figure;
-scatter(real(h_m_Meig), imag(h_m_Meig), 80, 'filled')
+scatter(real(h_Meig_char), imag(h_Meig_char), 80, 'filled')
 grid on
 xlabel('Re')
 ylabel('Im')
-title('Eigenvalues of M times gridstep h')
-axis equal
+title('Eigenvalues of M using characteristic boundary conditions')
+xlim([-0.5 0.2])
+ylim([-2.5 2.5])
 
 %%
+%Definerar här om L till Dirichlet
+Ll = kron(e2, e_1');
+Lr = kron(e2, e_m');
+L = [Ll;
+    Lr];
+%Definera P
+P = eye(2*m) - inv(H_bar)*transpose(L)*inv((L*inv(H_bar)*transpose(L)))*L;
 
+% Sätt ihop till M
+D_x = [zeros(m), Dp;
+    Dm, zeros(m)];
+M = -P*(D_x)*P;     % Struntar i C invers eftersom det blir enhetsmatrisen, D-matrisen försvinner eftersom beta=0  
 
+M_eig_dir = eig(M);
+h_Meig_dir = h*M_eig_dir;
+figure;
+scatter(real(h_Meig_dir), imag(h_Meig_dir), 80, 'filled')
+grid on
+xlabel('Re')
+ylabel('Im')
+title('Eigenvalues of M using Dirichlet boundary conditions')
+xlim([-0.5 0.2])
+ylim([-2.5 2.5])
 

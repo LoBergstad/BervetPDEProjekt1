@@ -47,8 +47,32 @@ D_x = [zeros(m), Dp;
     Dm, zeros(m)];
 M = -P*(D_x)*P;     % Struntar i C invers eftersom det blir enhetsmatrisen, D-matrisen försvinner eftersom beta=0  
 
-M_eigenvalues = eig(M);
-h_m_Meig = h*M_eigenvalues;
+M_eig_char = eig(M);
+h_m_Meig_char = h*M_eig_char;
+figure;
+scatter(real(h_m_Meig_char), imag(h_m_Meig_char), 80, 'filled')
+grid on
+xlabel('Re')
+ylabel('Im')
+title('Eigenvalues of M using characteristic boundary conditions')
+axis equal
+
+%%
+%Definerar här om L till Dirichlet
+Ll = kron(e2, e_1');
+Lr = kron(e2, e_m');
+L = [Ll;
+    Lr];
+%Definera P
+P = eye(2*m) - inv(H_bar)*transpose(L)*inv((L*inv(H_bar)*transpose(L)))*L;
+
+% Sätt ihop till M
+D_x = [zeros(m), Dp;
+    Dm, zeros(m)];
+M = -P*(D_x)*P;     % Struntar i C invers eftersom det blir enhetsmatrisen, D-matrisen försvinner eftersom beta=0  
+
+M_eig_dir = eig(M);
+h_m_Meig_dir = h*M_eig_dir;
 figure;
 scatter(real(h_m_Meig), imag(h_m_Meig), 80, 'filled')
 grid on
@@ -57,7 +81,32 @@ ylabel('Im')
 title('Eigenvalues of M times gridstep h')
 axis equal
 
+%% Pontus plot
+function plotEigenvalues(m, lam_data)
+    figure('Name', num2str(m), 'NumberTitle','off');
+    tl = tiledlayout(numel(lam_data),1,'TileSpacing','compact','Padding','compact');
+    ax = gobjects(numel(lam_data),1);
+    re_all = [];
+
+    for k = 1:numel(lam_data)
+        ax(k) = nexttile; grid on; hold on
+        bc_title = lam_data{k}{1};
+        lam = lam_data{k}{2};
+        
+        title(bc_title, 'Interpreter','latex')
+        plot(lam, '.', 'MarkerSize', 8);
+        ylim tight
+        re_all = [re_all; real(lam)];
+    end
+
+    xlabel(tl,'$\Re(h\lambda)$', 'Interpreter','latex')
+    ylabel(tl,'$\Im(h\lambda)$', 'Interpreter','latex')
+
+    xmin = min(re_all); xmax = max(re_all);
+    pad  = 0.05*(xmax - xmin);
+    set(ax, 'XLim', [xmin-pad, xmax+pad])
+    linkaxes(ax,'x')
+
+    sgtitle(sprintf('Eigenvalues of $hM$ (SBP7 upwind), $m=%d$', m), 'Interpreter','latex')
+end
 %%
-
-
-
