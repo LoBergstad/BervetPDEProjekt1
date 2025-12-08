@@ -73,8 +73,7 @@ Dm=HI*(Qm-1/2*e_1*e_1'+1/2*e_m*e_m') ;
 %%
 
 % Sätt ihop till M
-D_x = [0, Dp;
-    Dm, 0];
-M = -P*(D_x + D)*P;     % Struntar i C invers eftersom det blir enhetsmatrisen  
+D_x = [0, Dp];
+M = -P*(Upwind + D)*P;     % Struntar i C invers eftersom det blir enhetsmatrisen  
 M 
 
