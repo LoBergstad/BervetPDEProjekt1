@@ -1,3 +1,4 @@
+function[H, HI, Dp, Dm, Qp, Qm] = SBP7_Upwind(m,h)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% 7th order upwind SBP operator           %%%
 %%%                                         %%%
