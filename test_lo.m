@@ -125,7 +125,7 @@ k_char = R/lambda_max_char;  % = delta t
 CFL_char = k_char/h     %Multiplikation eller division?
 
 % För dirichlet
-lambda_max_dir = max(abs(h_Meig_dir));
+lambda_max_dir = max(abs(M_eig_dir));
 k_dir = R/lambda_max_dir;
 CFL_dir = k_dir/h
 
