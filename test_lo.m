@@ -115,14 +115,14 @@ axis equal
 grid on
 
 %% Hitta CFL teori
-% För characteristic
-lambda_max_char = max(abs(h_Meig_char));
-% Ska vara mindre än 
+% För characteristic, utan att 
+lambda_max_char = max(abs(M_eig_char));
+% Ska vara mindre än
 R = 2.78;
 k_char = R/lambda_max_char;  % = delta t
 
 
-CFL_char = k_char/h
+CFL_char = k_char/h     %Multiplikation eller division?
 
 % För dirichlet
 lambda_max_dir = max(abs(h_Meig_dir));
