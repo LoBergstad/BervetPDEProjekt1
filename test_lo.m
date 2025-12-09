@@ -97,7 +97,7 @@ S = abs(R);
 % --- Plot ---
 figure; hold on;
 contour(X, Y, S, [1 1], 'b', 'LineWidth', 1.5); % Stabilitetsgränsen
-scatter(real(h_Meig_char), imag(h_Meig_char), 80, 'filled', 'r') % Characteristic egenvärden
+scatter(real(h_Meig_char), imag(h_Meig_char), 10, 'filled', 'r') % Characteristic egenvärden
 xlabel('Re(z)');
 ylabel('Im(z)');
 title('Stability domain for RK4 with eigenvalues of M (Characteristic BC)');
@@ -108,7 +108,7 @@ grid on
 % --- Plot ---
 figure; hold on;
 contour(X, Y, S, [1 1], 'b', 'LineWidth', 1.5); % Stabilitetsgränsen
-scatter(real(h_Meig_dir), imag(h_Meig_dir), 80, 'filled', 'r') % Dirichlet egenvärden
+scatter(real(h_Meig_dir), imag(h_Meig_dir), 10, 'filled', 'r') % Dirichlet egenvärden
 xlabel('Re(z)');
 ylabel('Im(z)');
 title('Stability domain for RK4 with eigenvalues of M (Dirichlet BC)');
