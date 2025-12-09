@@ -147,30 +147,3 @@ end
 k_char_2_good = k_char_2 - 0.001;
 CFL_char_2 = k_char_2_good/h;
 
-
-
-%% Elin testar
-
-
-k_char_2 = 0.1;
-h_Meig_char_max = max(abs(h_Meig_char));
-h_Meig_char_max_k = k_char_2 * h_Meig_char_max;
-
-
-while h_Meig_char_max_k < 2.82
-    k_char_2 = k_char_2 + 0.001;
-    h_Meig_char_max_k = k_char_2 * h_Meig_char_max;
-end
-
-nya_grejen = h_Meig_char*k_char_2;
-
-figure; hold on;
-contour(X, Y, S, [1 1], 'b', 'LineWidth', 1.5); % Stabilitetsgränsen
-scatter(real(nya_grejen), imag(nya_grejen), 80, 'filled', 'r') % Characteristic egenvärden
-xlabel('Re(z)');
-ylabel('Im(z)');
-title('Stability domain for RK4 with eigenvalues of M (Characteristic BC)');
-axis equal
-grid on
-
-
