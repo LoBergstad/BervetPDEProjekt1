@@ -29,10 +29,6 @@ L_c = [Ll_c;
 % Nedan högst oklart
 domain_width = 1;   %Detta är x_r - x_l
 h = domain_width/(m - 1);
-%H = eye(m);
-%H(1, 1) = 1/2;
-%H(m, m) = 1/2;
-%H = h*H;
 
 [H, HI, Dp, Dm, ~, ~] = SBP7_Upwind(m, h);
 
@@ -97,7 +93,6 @@ Z = X + 1i*Y;
 % --- RK4 stabilitetsfunktion ---
 R = 1 + Z + (Z.^2)/2 + (Z.^3)/6 + (Z.^4)/24;
 S = abs(R);
-
 % --- Plot ---
 figure; hold on;
 contour(X, Y, S, [1 1], 'b', 'LineWidth', 1.5); % Stabilitetsgränsen
@@ -125,9 +120,29 @@ lambda_max_char = max(abs(h_Meig_char));
 % Ska vara mindre än 
 R = 2.78;
 k_char = R/lambda_max_char;  % = delta t
+
+
 CFL_char = k_char/h
 
 % För dirichlet
 lambda_max_dir = max(abs(h_Meig_dir));
 k_dir = R/lambda_max_dir;
 CFL_dir = k_dir/h
+
+%% Hitta CFL försök 2
+% För characteristic
+
+k_char_2 = 0.1;
+h_Meig_char_max = max(abs(h_Meig_char));
+h_Meig_char_max_k = k_char_2 * h_Meig_char_max;
+R_2 = 1 + h_Meig_char_max_k + (h_Meig_char_max_k.^2)/2 + (h_Meig_char_max_k.^3)/6 + (h_Meig_char_max_k.^4)/24;
+
+while R_2 < 1
+    k_char_2 = k_char_2 + 0.001;
+    h_Meig_char_max_k = k_char_2 * h_Meig_char_max;
+    R_2 = 1 + h_Meig_char_max_k + (h_Meig_char_max_k.^2)/2 + (h_Meig_char_max_k.^3)/6 + (h_Meig_char_max_k.^4)/24;
+    k_char_2
+    R_2
+end
+k_char_2_good = k_char_2 - 0.001
+CFL_char_2 = k_char_2_good/h
