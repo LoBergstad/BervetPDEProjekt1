@@ -26,7 +26,6 @@ L_c = [Ll_c;
 % V_t = -PC^-1(D_x + D)PV = MV
 % M = -PC^-1(D_x + D)P
 
-% Nedan högst oklart
 domain_width = 1;   %Detta är x_r - x_l
 h = domain_width/(m - 1);
 
@@ -42,8 +41,10 @@ P_c = eye(2*m) - inv(H_bar)*transpose(L_c)*inv((L_c*inv(H_bar)*transpose(L_c)))*
 % Sätt ihop till M
 D_x = [zeros(m), Dp;
     Dm, zeros(m)];
+
 M = -P_c*(D_x)*P_c;     % Struntar i C invers eftersom det blir enhetsmatrisen, D-matrisen försvinner eftersom beta=0  
 
+% Plotta egenvärden för Characteristic
 M_eig_char = eig(M);
 h_Meig_char = h*M_eig_char;
 figure;
@@ -56,7 +57,7 @@ xlim([-0.5 0.2])
 ylim([-2.5 2.5])
 
 %%
-%Definerar här om L till Dirichlet
+% Dirichlet
 Ll_d = kron(e2, e_1');
 Lr_d = kron(e2, e_m');
 L_d = [Ll_d;
@@ -114,36 +115,32 @@ title('Stability domain for RK4 with eigenvalues of M (Dirichlet BC)');
 axis equal
 grid on
 
-%% Hitta CFL teori
-% För characteristic, utan att 
-lambda_max_char = max(abs(M_eig_char));
-% Ska vara mindre än
-R = 2.78;
-k_char = R/lambda_max_char;  % = delta t
+%% Hitta CFL m.h.a 2.78
+%        % För characteristic, utan att 
+%        lambda_max_char = max(abs(M_eig_char));
+%        % Ska vara mindre än
+%        R = 2.78;
+%        k_char = R/lambda_max_char;  % = delta t
+%        
+%        
+%        CFL_char = k_char/h
+%        
+%        % För dirichlet
+%        lambda_max_dir = max(abs(M_eig_dir));
+%        k_dir = R/lambda_max_dir;
+%        CFL_dir = k_dir/h
 
-
-CFL_char = k_char/h     %Multiplikation eller division?
-
-% För dirichlet
-lambda_max_dir = max(abs(M_eig_dir));
-k_dir = R/lambda_max_dir;
-CFL_dir = k_dir/h
-
-%% Hitta CFL försök 2
+%% Hitta CFL enligt RK4 stabilitetsekvationen
 % För characteristic
 
-k_char_2 = 0.1;
-h_Meig_char_max = max(abs(h_Meig_char));
-h_Meig_char_max_k = k_char_2 * h_Meig_char_max;
-R_2 = 1 + h_Meig_char_max_k + (h_Meig_char_max_k.^2)/2 + (h_Meig_char_max_k.^3)/6 + (h_Meig_char_max_k.^4)/24;
-
-while R_2 < 1
-    k_char_2 = k_char_2 + 0.001;
-    h_Meig_char_max_k = k_char_2 * h_Meig_char_max;
-    R_2 = 1 + h_Meig_char_max_k + (h_Meig_char_max_k.^2)/2 + (h_Meig_char_max_k.^3)/6 + (h_Meig_char_max_k.^4)/24;
-    k_char_2;
-    R_2;
+lambda_char = M_eig_char;
+k_char = 0.01;
+z = k_char*lambda_char;
+R_char = 1 + z + (z.^2)/2 + (z.^3)/6 + (z.^4)/24;
+while all(abs(R_char) <= 1)
+    k_char = k_char + 0.000001;
+    z = k_char*lambda_char;
+    R_char = 1 + z + (z.^2)/2 + (z.^3)/6 + (z.^4)/24;
 end
-k_char_2_good = k_char_2 - 0.001;
-CFL_char_2 = k_char_2_good/h;
-
+k_char - 0.000001;
+CFL_char = k_char/h

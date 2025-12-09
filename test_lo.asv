@@ -114,65 +114,32 @@ title('Stability domain for RK4 with eigenvalues of M (Dirichlet BC)');
 axis equal
 grid on
 
-%% Hitta CFL teori
+%% Hitta CFL m.h.a 2.78
+%        % För characteristic, utan att 
+%        lambda_max_char = max(abs(M_eig_char));
+%        % Ska vara mindre än
+%        R = 2.78;
+%        k_char = R/lambda_max_char;  % = delta t
+%        
+%        
+%        CFL_char = k_char/h
+%        
+%        % För dirichlet
+%        lambda_max_dir = max(abs(M_eig_dir));
+%        k_dir = R/lambda_max_dir;
+%        CFL_dir = k_dir/h
+
+%% Hitta CFL enligt RK4 stabilitetsekvationen
 % För characteristic
-lambda_max_char = max(abs(h_Meig_char));
-% Ska vara mindre än 
-R = 2.78;
-k_char = R/lambda_max_char;  % = delta t
 
-
+lambda_char = M_eig_char;
+k_char = 0.01;
+z = k_char*lambda_char;
+R_char = 1 + z + (z.^2)/2 + (z.^3)/6 + (z.^4)/24;
+while all(abs(R_char) <= 1)
+    k_char = k_char + 0.000001;
+    z = k_char*lambda_char;
+    R_char = 1 + z + (z.^2)/2 + (z.^3)/6 + (z.^4)/24;
+end
+k_char - 0.000001;
 CFL_char = k_char/h
-
-% För dirichlet
-lambda_max_dir = max(abs(h_Meig_dir));
-k_dir = R/lambda_max_dir;
-CFL_dir = k_dir/h
-
-%% Hitta CFL försök 2
-% För characteristic
-
-k_char_2 = 0.1;
-h_Meig_char_max = max(abs(h_Meig_char));
-h_Meig_char_max_k = k_char_2 * h_Meig_char_max;
-R_2 = 1 + h_Meig_char_max_k + (h_Meig_char_max_k.^2)/2 + (h_Meig_char_max_k.^3)/6 + (h_Meig_char_max_k.^4)/24;
-
-while R_2 < 1
-    k_char_2 = k_char_2 + 0.001;
-    h_Meig_char_max_k = k_char_2 * h_Meig_char_max;
-    R_2 = 1 + h_Meig_char_max_k + (h_Meig_char_max_k.^2)/2 + (h_Meig_char_max_k.^3)/6 + (h_Meig_char_max_k.^4)/24;
-    k_char_2;
-    R_2;
-end
-k_char_2_good = k_char_2 - 0.001;
-CFL_char_2 = k_char_2_good/h;
-
-
-
-%% Elin testar
-
-
-k_char_2 = 0.1;
-h_Meig_char_max = max(abs(h_Meig_char));
-h_Meig_char_max_k = k_char_2 * h_Meig_char_max;
-
-
-while R_2 < 1
-    k_char_2 = k_char_2 + 0.001;
-    h_Meig_char_max_k = k_char_2 * h_Meig_char_max;
-    k_char_2;
-    R_2;
-end
-
-nya_grejen = h_Meig_char*k_elin;
-
-figure; hold on;
-contour(X, Y, S, [1 1], 'b', 'LineWidth', 1.5); % Stabilitetsgränsen
-scatter(real(nya_grejen), imag(nya_grejen), 80, 'filled', 'r') % Characteristic egenvärden
-xlabel('Re(z)');
-ylabel('Im(z)');
-title('Stability domain for RK4 with eigenvalues of M (Characteristic BC)');
-axis equal
-grid on
-
-
