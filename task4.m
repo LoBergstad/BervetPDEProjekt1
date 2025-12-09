@@ -6,7 +6,7 @@ beta = 0;
 r_star = 0.1;
 x_l = -1;
 x_r = 1;
-t = 1.8;
+t_star = 1.8;
 CFL = 0.05;
 
 L = x_r -x_l;
@@ -36,5 +36,14 @@ q = log10(err_m_norm/err_n_norm) / log10(n/m);
 theta_1 = @(x, t) exp(-((x-t)/r_star).^2);
 theta_2 = @(x, t) -exp(-((x+t)/r_star).^2);
 
+
+%initial data
+%p_x_0 = theta_1(x,0) - theta_2(x,0);
+%v_x_0 = theta_1(x,0) + theta_2(x,0);
+
+
+%analytic solution
+p = theta_2(x, L-t) - theta_1(x, L-t);
+v = theta_1(x, L-t) - theta_2(x, L-t);
 
 
