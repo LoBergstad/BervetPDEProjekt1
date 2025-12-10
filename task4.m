@@ -133,7 +133,7 @@ for i = 1:length(m_values)
 end
 
 %% q för SBP7
-q_values = zeros(size(m_values));
+q_values_SBP7 = zeros(size(m_values));
 
 for i = 2:length(m_values)
     m_prev = m_values(i-1);
@@ -142,7 +142,7 @@ for i = 2:length(m_values)
     err_now = err_norms_SBP7(i);
 
     q = log10(err_prev/err_now) / log10(m_now/m_prev);
-    q_values(i) = q;
+    q_values_SBP7(i) = q;
 end
 
 %% Testar min analytic och det blir jättebra
@@ -226,7 +226,7 @@ end
 
 %% q för SBP6
 
-q_values = zeros(size(m_values));
+q_values_SBP6 = zeros(size(m_values));
 
 for i = 2:length(m_values)
     m_prev = m_values(i-1);
@@ -235,5 +235,5 @@ for i = 2:length(m_values)
     err_now = err_norms_SBP6(i);
 
     q = log10(err_prev/err_now) / log10(m_now/m_prev);
-    q_values(i) = q;
+    q_values_SBP6(i) = q;
 end
