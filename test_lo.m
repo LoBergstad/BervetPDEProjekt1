@@ -161,19 +161,17 @@ CFL_dir = k_dir/h
 
 %% === RK4-lösning av W_t = M W ===
 
-% Begynnelsevillkor [p(0); v(0)]
-W0 = [1; 0];
 
 % Tidsintervall och tidssteg
-tspan = [0 10];
+tspan = [0 1.8];
 k = 0.005*h;
 
 % === RK4-integration ===
 [t, W] = rk4_linear(M, W0, tspan, k);
 
 % === Extrahera komponenter ===
-p = W(:,1);
-v = W(:,2);
+p = W(1:m);
+v = W(m+1:2*m);
 
 %% === Plotta lösningen ===
 figure;
