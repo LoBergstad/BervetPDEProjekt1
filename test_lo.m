@@ -97,7 +97,7 @@ S = abs(R);
 % --- Plot ---
 figure; hold on;
 contour(X, Y, S, [1 1], 'b', 'LineWidth', 1.5); % Stabilitetsgränsen
-scatter(real(h_Meig_char), imag(h_Meig_char), 80, 'filled', 'r') % Characteristic egenvärden
+scatter(real(h_Meig_char), imag(h_Meig_char), 10, 'filled', 'r') % Characteristic egenvärden
 xlabel('Re(z)');
 ylabel('Im(z)');
 title('Stability domain for RK4 with eigenvalues of M (Characteristic BC)');
@@ -108,7 +108,7 @@ grid on
 % --- Plot ---
 figure; hold on;
 contour(X, Y, S, [1 1], 'b', 'LineWidth', 1.5); % Stabilitetsgränsen
-scatter(real(h_Meig_dir), imag(h_Meig_dir), 80, 'filled', 'r') % Dirichlet egenvärden
+scatter(real(h_Meig_dir), imag(h_Meig_dir), 10, 'filled', 'r') % Dirichlet egenvärden
 xlabel('Re(z)');
 ylabel('Im(z)');
 title('Stability domain for RK4 with eigenvalues of M (Dirichlet BC)');
@@ -157,4 +157,32 @@ while all(abs(R_dir) <= 1)
 end
 k_dir = k_dir - 0.000001;
 CFL_dir = k_dir/h
+
+
+%% === RK4-lösning av W_t = M W ===
+
+% Begynnelsevillkor [p(0); v(0)]
+W0 = [1; 0];
+
+% Tidsintervall och tidssteg
+tspan = [0 10];
+k = 0.005*h;
+
+% === RK4-integration ===
+[t, W] = rk4_linear(M, W0, tspan, k);
+
+% === Extrahera komponenter ===
+p = W(:,1);
+v = W(:,2);
+
+%% === Plotta lösningen ===
+figure;
+
+plot(t, p, 'b', 'LineWidth', 1.5); hold on;
+plot(t, v, 'r--', 'LineWidth', 1.5);
+xlabel('t');
+ylabel('p(t), v(t)');
+legend('p(t)','v(t)');
+title('Lösning av W_t = M W med RK4');
+grid on;
 
