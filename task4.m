@@ -33,10 +33,60 @@ theta_2 = @(x, t) -exp(-((x+t)/r_star).^2);
 
 %initial data
 m = 101;
+
+domain_width = 2;   %Detta är x_r - x_l
+h = domain_width/(m - 1);
+
 x = linspace(-1, 1, m);
 p0 = theta_1(x,0) - theta_2(x,0);
 v0 = theta_1(x,0) + theta_2(x,0);
+u0 = [p0 v0];
 
+
+
+
+e_1 = zeros(m,1);
+e_1(1) = 1;
+e_m = zeros(m, 1);
+e_m(m) = 1;
+e1 = [1, 0];    % Detta är e^(1)
+e2 = [0, 1];    % e^(2)
+
+[H, HI, Dp, Dm, ~, ~] = SBP7_Upwind(m, h);
+
+H_bar = kron(eye(2), H);  %Kan strunta i C eftersom den blir ehnhetsmatris (2m x 2m) eftersom roh = c =1
+
+% Dirichlet
+Ll_d = kron(e2, e_1');
+Lr_d = kron(e2, e_m');
+L_d = [Ll_d;
+    Lr_d];
+%Definera P för dirichlet
+P_d = eye(2*m) - inv(H_bar)*transpose(L_d)*inv((L_d*inv(H_bar)*transpose(L_d)))*L_d;
+
+% Sätt ihop till M
+D_x = [zeros(m), Dp;
+    Dm, zeros(m)];
+M = -P_d*(D_x)*P_d;     % Struntar i C invers eftersom det blir enhetsmatrisen, D-matrisen försvinner eftersom beta=0  
+
+
+
+
+
+[t, u] = RK4(M, u0, [0, 1.8], 0.05*h);
+p = u(1:m);
+v = u(m+1:2*m);
+plot(x, p, 'r-', 'LineWidth', 1.5);
+hold on
+plot(x, v, 'b--', 'LineWidth', 1.5);
+hold off
+
+legend('p', 'v')
+title('RK4 grejer')
+
+
+
+%%
 plot(x, p0, 'r-', 'LineWidth', 1.5);
 hold on
 plot(x, v0, 'b--', 'LineWidth', 1.5);
@@ -45,8 +95,8 @@ hold off
 legend('p', 'v')
 title('Initialvärden')
 
-u0 = [p0; v0]
-u0(:,46)
+
+
 
 %analytic solution
 p_analytic = @(x, t) theta_2(x, L-t) - theta_1(x, L-t);
