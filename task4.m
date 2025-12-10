@@ -124,7 +124,7 @@ for i = 1:length(m_values)
     [~, u_matrix] = RK4(M_d, u0_current, [0, t_star], alpha*h);
     u_m = u_matrix(:, end);
 
-    u_anal_matrix = u_analytic(x, 1.8); %2 x m matrix
+    u_anal_matrix = u_analytic(x, t_star); %2 x m matrix
     u_anal = u_anal_matrix(:); % 2m x 1 
 
     %Beräkna error grejerna
