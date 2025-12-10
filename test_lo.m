@@ -166,7 +166,7 @@ W0 = [1; 0];
 
 % Tidsintervall och tidssteg
 tspan = [0 10];
-k = CFL_dir/h;  %Först för Dirichlet BC
+k = 0.005*h;
 
 % === RK4-integration ===
 [t, W] = rk4_linear(M, W0, tspan, k);
