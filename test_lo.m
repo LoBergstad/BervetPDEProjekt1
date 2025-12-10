@@ -137,12 +137,12 @@ lambda_char = M_eig_char;
 k_char = 0.01;
 z1 = k_char*lambda_char;
 R_char = 1 + z1 + (z1.^2)/2 + (z1.^3)/6 + (z1.^4)/24;
-while all(abs(R_char) <= 1)
+while all(abs(R_char) <= 1.0000000001)  %Måste vara precis över 1 för trunkeringsfel
     k_char = k_char + 0.000001;
     z1 = k_char*lambda_char;
     R_char = 1 + z1 + (z1.^2)/2 + (z1.^3)/6 + (z1.^4)/24;
 end
-k_char - 0.000001;
+k_char = k_char - 0.000001
 CFL_char = k_char/h
 
 % För dirichlet
@@ -155,7 +155,7 @@ while all(abs(R_dir) <= 1)
     z2 = k_dir * lambda_dir;
     R_dir = 1 + z2 + (z2.^2)/2 + (z2.^3)/6 + (z2.^4)/24;
 end
-k_dir = k_dir - 0.000001;
+k_dir = k_dir - 0.000001
 CFL_dir = k_dir/h
 
 
