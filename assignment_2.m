@@ -56,7 +56,7 @@ for order = [6, 7]
             L = [kron(e1 + e2, e_1'); 
                 kron(e1 - e2, e_m')];
             P = eye(2*m) - H_bar\L.' / (L/H_bar * L.')*L;
-            M = -P*(D_x)*P;
+            M = -P/C*(D_x)*P;
             
             % Initial Values
             p0 = theta_1(x,0);% - theta_2(x,0);
