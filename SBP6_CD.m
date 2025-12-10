@@ -1,5 +1,4 @@
-function[M] = SBP6_CD(m,h)
-
+function[H, HI, D1, D2, Q, M] = SBP6_CD(m, h)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% 6th order central-difference %%%
 %%% SBP operators for D1 and D2 %%%
