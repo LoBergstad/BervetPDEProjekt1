@@ -56,18 +56,17 @@ e2 = [0, 1];    % e^(2)
 
 H_bar = kron(eye(2), H);  %Kan strunta i C eftersom den blir ehnhetsmatris (2m x 2m) eftersom roh = c =1
 
+D_x = [zeros(m), Dp;
+    Dm, zeros(m)];     
+
 % Dirichlet
+
 Ll_d = kron(e2, e_1');
 Lr_d = kron(e2, e_m');
-L_d = [Ll_d;
+L = [Ll_d;
     Lr_d];
-%Definera P för dirichlet
-P_d = eye(2*m) - inv(H_bar)*transpose(L_d)*inv((L_d*inv(H_bar)*transpose(L_d)))*L_d;
-
-% Sätt ihop till M
-D_x = [zeros(m), Dp;
-    Dm, zeros(m)];
-M = -P_d*(D_x)*P_d;     % Struntar i C invers eftersom det blir enhetsmatrisen, D-matrisen försvinner eftersom beta=0  
+P = eye(2*m) - H_bar\L.' / (L/H_bar * L.')*L;
+M_d = -P*(D_x)*P;
 
 
 
