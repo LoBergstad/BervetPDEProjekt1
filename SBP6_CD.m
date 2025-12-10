@@ -1,11 +1,11 @@
 function[H, HI, D1, D2, Q, M] = SBP6_CD(m, h)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% 6th order central-difference %%%
-%%% SBP operators for D1 and D2 %%%
+%%% 6th order central-difference            %%%
+%%% SBP operators for D1 and D2             %%%
 %%% %%%
-%%% Derived by Ken Mattsson %%%
+%%% Derived by Ken Mattsson                 %%%
 %%% %%%
-%%% Set number of unknowns m, grid step h %%%
+%%% Set number of unknowns m, grid step h   %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 e_1=zeros(m,1);e_1(1)=1;
 e_m=zeros(m,1);e_m(m)=1;
