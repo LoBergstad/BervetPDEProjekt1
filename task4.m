@@ -74,8 +74,10 @@ M = -P_d*(D_x)*P_d;     % Struntar i C invers eftersom det blir enhetsmatrisen, 
 
 
 [t, u] = RK4(M, u0, [0, 1.8], 0.05*h);
-p = u(1:m);
-v = u(m+1:2*m);
+p = u(1:m, end);
+v = u(m+1:2*m, end);
+
+
 plot(x, p, 'r-', 'LineWidth', 1.5);
 hold on
 plot(x, v, 'b--', 'LineWidth', 1.5);
