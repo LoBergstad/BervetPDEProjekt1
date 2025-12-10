@@ -10,7 +10,7 @@ alpha = 0.05;
 L_domain = x_r - x_l;
 
 %antal punkter
-m = [101, 201, 401, 601, 801];
+%m = [101, 201, 401, 601, 801];
 
 
 
@@ -28,7 +28,9 @@ h = domain_width/(m - 1);
 x = linspace(-1, 1, m);
 p0 = theta_1(x,0) - theta_2(x,0);
 v0 = theta_1(x,0) + theta_2(x,0);
-u0 = [p0 v0];
+
+%u0 = [p0; v0];
+u0 = [p0(:); v0(:)]; % Kolumnvektor (2m x 1)
 
 
 [H, HI, Dp, Dm, ~, ~] = SBP7_Upwind(m, h);
@@ -44,7 +46,7 @@ e_m(m) = 1;
 e1 = [1, 0];    % Detta är e^(1)
 e2 = [0, 1];    % e^(2)
 
-Ll_d = kron(e1, e_1.');
+Ll_d = kron(e1, e_1.');     %Pressure är 0 dirichlet
 Lr_d = kron(e1, e_m.');
 L = [Ll_d;
     Lr_d];
@@ -53,7 +55,7 @@ M_d = -P*(D_x)*P;
 
 
 
-[t, u] = RK4(M, u0, [0, 1.8], 0.05*h);
+[t, u] = RK4(M_d, u0, [0, 1.8], 0.05*h);
 p = u(1:m, end);
 v = u(m+1:2*m, end);
 
@@ -79,20 +81,20 @@ title('Initialvärden')
 
 %% Tabellen
 
-%analytic solution
-p_analytic = @(x, t) theta_2(x, 2-t) - theta_1(x, 2-t);
-v_analytic = @(x, t) theta_1(x, 2-t) + theta_2(x, 2-t);
-u_analytic = @(x, t) [p_analytic(x,t); v_analytic(x,t)];
 
-%m_values = [101, 201, 401, 601, 801];
-m_values = [101];
+m_values = [101, 201, 401, 601, 801];
 err_norms = zeros(size(m_values));
 
 for i = 1:length(m_values)
-    m= m_values(i);    
     
+    m= m_values(i);    
     x = linspace(-1, 1, m);
     h = domain_width/(m - 1);
+    
+    %analytic solution vid t_star
+    p_analytic = theta_2(x, 2-t_star) - theta_1(x, 2-t_star);
+    v_analytic = theta_1(x, 2-t_star) + theta_2(x, 2-t_star);
+    u_analytic = [p_analytic(:); v_analytic(:)];
 
     % 1. Återskapa initialdata u0 för aktuellt m
     p0 = theta_1(x,0) - theta_2(x,0);
@@ -101,7 +103,7 @@ for i = 1:length(m_values)
 
     %UPWIND SBP
     [H, HI, Dp, Dm, ~, ~] = SBP7_Upwind(m, h);
-    H_bar = kron(eye(2), H);  %Kan strunta i C eftersom den blir ehnhetsmatris (2m x 2m) eftersom roh = c =1
+    H_bar = kron(eye(2), H);
     D_x = [zeros(m), Dp;
         Dm, zeros(m)];     
     
@@ -113,8 +115,8 @@ for i = 1:length(m_values)
     e1 = [1, 0];    % Detta är e^(1)
     e2 = [0, 1];    % e^(2)
     
-    Ll_d = kron(e1, e_1');
-    Lr_d = kron(e1, e_m');
+    Ll_d = kron(e1, e_1.');
+    Lr_d = kron(e1, e_m.');
     L = [Ll_d;
         Lr_d];
 
@@ -124,20 +126,17 @@ for i = 1:length(m_values)
     [~, u_matrix] = RK4(M_d, u0_current, [0, t_star], alpha*h);
     u_m = u_matrix(:, end);
 
-    u_anal_matrix = u_analytic(x, t_star); %2 x m matrix
-    u_anal = u_anal_matrix(:); % 2m x 1 
-
     %Beräkna error grejerna
-    err = u_anal - u_m;
+    err = u_analytic - u_m;
     err_norm = sqrt(h) * norm(err);
     %Choppa in i listan
     err_norms(i) = err_norm;
 end   
+err_norms
+%% Testar min analytic och det blir jättebra
 
-%% Testar min analytic och det blir skit
-
-p_anal_plot = u_anal(1:m, end);
-v_anal_plot = u_anal(m+1:2*m, end);
+p_anal_plot = u_analytic(1:m, end);
+v_anal_plot = u_analytic(m+1:2*m, end);
 
 
 plot(x, p_anal_plot, 'r-', 'LineWidth', 1.5);
