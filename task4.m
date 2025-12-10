@@ -44,8 +44,8 @@ e_m(m) = 1;
 e1 = [1, 0];    % Detta är e^(1)
 e2 = [0, 1];    % e^(2)
 
-Ll_d = kron(e1, e_1');
-Lr_d = kron(e1, e_m');
+Ll_d = kron(e1, e_1.');
+Lr_d = kron(e1, e_m.');
 L = [Ll_d;
     Lr_d];
 P = eye(2*m) - H_bar\L.' / (L/H_bar * L.')*L;
