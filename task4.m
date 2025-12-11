@@ -67,7 +67,7 @@ plot(x, v, 'b--', 'LineWidth', 1.5);
 hold off
 
 legend('p', 'v')
-title('RK4 grejer')
+title('Numerical solution at t=1.8')
 
 
 
@@ -78,7 +78,7 @@ plot(x, v0, 'b--', 'LineWidth', 1.5);
 hold off
 
 legend('p', 'v')
-title('Initialvärden')
+title('Numerical solution at t=0')
 
 %% Error SBP7
 m_values = [101, 201, 401, 601, 801];
