@@ -145,30 +145,6 @@ for i = 2:length(m_values)
     q_values_SBP7(i) = q;
 end
 q_values_SBP7
-%% Testar min analytic och det blir jättebra
-x = linspace(-1, 1, m);
-h = domain_width/(m - 1);
-    
-%analytic solution vid t_star
-p_analytic = theta_2(x, 2-t_star) - theta_1(x, 2-t_star);
-v_analytic = theta_1(x, 2-t_star) + theta_2(x, 2-t_star);
-u_analytic = [p_analytic(:); v_analytic(:)];
-
-plot(x, p_analytic, 'r-', 'LineWidth', 1.5);
-hold on
-plot(x, v_analytic, 'b--', 'LineWidth', 1.5);
-hold off
-
-legend('p', 'v')
-title('Analytic solution at t=1.8')
-
-%error för m punkter
-%err_m = u_t_star - u_m;
-%err_m_norm = sqrt(h) * norm(err_m);
-
-%Convergence rate (q):
-%q = log10(err_m_norm/err_n_norm) / log10(n/m);
-
 
 %% Error SBP 6
 
