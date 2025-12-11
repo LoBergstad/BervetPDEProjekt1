@@ -95,7 +95,7 @@ legend('p', 'v');
 
 drawnow;
 
-%% Animera
+% Animera
 
 frameTime = 0.005;
 n = 5;
