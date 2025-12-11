@@ -87,11 +87,11 @@ grid on
 %% Hitta CFL enligt RK4 stabilitetsekvationen
 % För characteristic
 k = 0.01; %delta t
-eigs = eig(M_d);
+eigs = eig(M_d);    % Byter här till M_c för characteristic
 z = k*eigs;
 
 R = 1 + z + (z.^2)/2 + (z.^3)/6 + (z.^4)/24;
-while all(abs(R) <= 1)
+while all(abs(R) <= 1.000001)
     k = k + 0.000001;
     z = k*eigs;
     R = 1 + z + (z.^2)/2 + (z.^3)/6 + (z.^4)/24;
