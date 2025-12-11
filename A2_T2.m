@@ -12,7 +12,7 @@ beta_1 = 0;
 
 rho_2 = 2;
 c_2 = 2;
-beta_2 = 0;
+beta_2 = 10;
 
 r_s = 0.1;
 x_l = -4;
@@ -58,7 +58,13 @@ D = diag(is_wall .* D_2 + (~is_wall) .* D_1);
 
 
 % Derivator % Integrator
-[H, ~, Dp, Dm, ~, ~] = SBP7_Upwind(m, h);
+%Kolla för ordning 7
+%[H, ~, Dp, Dm, ~, ~] = SBP7_Upwind(m, h);
+%Kolla för ordning 6
+[H, ~, D1, ~, ~, ~] = SBP6(m, h);
+Dp = D1;
+Dm = D1;
+
 D_x = [zeros(m), Dp; Dm, zeros(m)]; 
 H_bar = kron(eye(2), H)*C;
 
