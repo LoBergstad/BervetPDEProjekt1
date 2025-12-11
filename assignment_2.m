@@ -65,6 +65,7 @@ for order = [6, 7]
             u0 = [p0 v0];
 
             [t, u] = RK4(M, u0, [0, t_end], alpha*h);
+
             p = u(1:m, end);
             v = u(m+1:2*m, end);
             
@@ -76,7 +77,7 @@ for order = [6, 7]
             hold off
 
             legend('p', 'v');
-            sprintf('%.0f th order SBP operator, m = %.0f, at t = %.1f', order, m, t_end)
+            %sprintf('%.0f th order SBP operator, m = %.0f, at t = %.1f', order, m, t_end)
             title(sprintf('%.0f th order SBP operator, m = %.0f, at t = %.1f', order, m, t_end));
             
             drawnow

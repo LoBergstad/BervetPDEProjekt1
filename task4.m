@@ -9,15 +9,9 @@ t_star = 1.8;
 alpha = 0.05;
 L_domain = x_r - x_l;
 
-%antal punkter
-%m = [101, 201, 401, 601, 801];
-
-
-
 %Gaussian profiles:
 theta_1 = @(x, t) exp(-((x-t)/r_star).^2);
 theta_2 = @(x, t) -exp(-((x+t)/r_star).^2);
-
 
 %initial data
 m = 101;
@@ -55,15 +49,17 @@ M_d = -P*(D_x)*P;
 
 
 
-[t, u] = RK4(M_d, u0, [0, 1.8], 0.05*h);
-p = u(1:m, end);
-v = u(m+1:2*m, end);
-
+[t, u] = RK4(M_d, u0, [0, 1.8], 0.05*h);    %Utför RK4
+p = u(1:m, :);                            % Plocka ut det m första termerna = p
+v = u(m+1:2*m, :);                        % v = rad m+1 till 2m
 
 %% Plot vid t=1.8
-plot(x, p, 'r-', 'LineWidth', 1.5);
+p_end = p(:, end);
+v_end = v(:, end);
+
+plot(x, p_end, 'r-', 'LineWidth', 1.5);
 hold on
-plot(x, v, 'b--', 'LineWidth', 1.5);
+plot(x, v_end, 'b--', 'LineWidth', 1.5);
 hold off
 
 legend('p', 'v')
@@ -72,6 +68,9 @@ title('Numerical solution at t=1.8')
 
 
 %% Plot vid t=0
+%p0 = p(:, 1);  % Kan även hitta initialvärden från p & v arrayer
+%v0 = v(:, 1);
+
 plot(x, p0, 'r-', 'LineWidth', 1.5);
 hold on
 plot(x, v0, 'b--', 'LineWidth', 1.5);
@@ -82,11 +81,11 @@ title('Numerical solution at t=0')
 
 %% Error SBP7
 m_values = [101, 201, 401, 601, 801];
-err_norms = zeros(size(m_values));
+err_norms_SBP7 = zeros(size(m_values));
 
 for i = 1:length(m_values)
     
-    m= m_values(i);    
+    m = m_values(i);    % Plocka ut rätt m
     x = linspace(-1, 1, m);
     h = domain_width/(m - 1);
     
@@ -122,8 +121,8 @@ for i = 1:length(m_values)
     P = eye(2*m) - H_bar\L.' / (L/H_bar * L.')*L;
     M_d = -P*(D_x)*P;
     
-    [~, u_matrix] = RK4(M_d, u0_current, [0, t_star], alpha*h);
-    u_m = u_matrix(:, end);
+    [~, u_numerical] = RK4(M_d, u0_current, [0, t_star], alpha*h);
+    u_m = u_numerical(:, end);
 
     %Beräkna error grejerna
     err = u_analytic - u_m;
@@ -131,6 +130,7 @@ for i = 1:length(m_values)
     %Choppa in i listan
     err_norms_SBP7(i) = err_norm;
 end
+err_norms_SBP7
 
 %% q för SBP7
 q_values_SBP7 = zeros(size(m_values));
@@ -144,20 +144,23 @@ for i = 2:length(m_values)
     q = log10(err_prev/err_now) / log10(m_now/m_prev);
     q_values_SBP7(i) = q;
 end
-
+q_values_SBP7
 %% Testar min analytic och det blir jättebra
+x = linspace(-1, 1, m);
+h = domain_width/(m - 1);
+    
+%analytic solution vid t_star
+p_analytic = theta_2(x, 2-t_star) - theta_1(x, 2-t_star);
+v_analytic = theta_1(x, 2-t_star) + theta_2(x, 2-t_star);
+u_analytic = [p_analytic(:); v_analytic(:)];
 
-p_anal_plot = u_analytic(1:m, end);
-v_anal_plot = u_analytic(m+1:2*m, end);
-
-
-plot(x, p_anal_plot, 'r-', 'LineWidth', 1.5);
+plot(x, p_analytic, 'r-', 'LineWidth', 1.5);
 hold on
-plot(x, v_anal_plot, 'b--', 'LineWidth', 1.5);
+plot(x, v_analytic, 'b--', 'LineWidth', 1.5);
 hold off
 
 legend('p', 'v')
-title('Analytic')
+title('Analytic solution at t=1.8')
 
 %error för m punkter
 %err_m = u_t_star - u_m;
@@ -170,7 +173,7 @@ title('Analytic')
 %% Error SBP 6
 
 m_values = [101, 201, 401, 601, 801];
-err_norms = zeros(size(m_values));
+err_norms_SBP6 = zeros(size(m_values));
 
 for i = 1:length(m_values)
     
@@ -214,8 +217,8 @@ for i = 1:length(m_values)
     P = eye(2*m) - H_bar\L.' / (L/H_bar * L.')*L;
     M_d = -P*(D_x)*P;
     
-    [~, u_matrix] = RK4(M_d, u0_current, [0, t_star], alpha*h);
-    u_m = u_matrix(:, end);
+    [~, u_numerical] = RK4(M_d, u0_current, [0, t_star], alpha*h);
+    u_m = u_numerical(:, end);
 
     %Beräkna error grejerna
     err = u_analytic - u_m;
@@ -223,7 +226,7 @@ for i = 1:length(m_values)
     %Choppa in i listan
     err_norms_SBP6(i) = err_norm;
 end   
-
+err_norms_SBP6
 %% q för SBP6
 
 q_values_SBP6 = zeros(size(m_values));
@@ -237,3 +240,4 @@ for i = 2:length(m_values)
     q = log10(err_prev/err_now) / log10(m_now/m_prev);
     q_values_SBP6(i) = q;
 end
+q_values_SBP6
