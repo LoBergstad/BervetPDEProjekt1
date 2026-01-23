@@ -98,3 +98,4 @@ while all(abs(R) <= 1.000001)
 end
 k = k - 0.000001
 CFL_char = k/h
+

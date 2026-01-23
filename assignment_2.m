@@ -54,14 +54,14 @@ for order = [6, 7]
           
             
             % Characteristic BC
-            L = [kron(e1 + e2, e_1'); 
-                kron(e1 - e2, e_m')];
+            L = [kron(e1 + c1*e2, e_1'); 
+                kron(e1 - c1*e2, e_m')];
             P = eye(2*m) - H_bar\L.' / (L/H_bar * L.')*L;
             M = -P/C*(D_x)*P;
             
             % Initial Values
-            p0 = theta_1(x,0);% - theta_2(x,0);
-            v0 = theta_1(x,0);% + theta_2(x,0);
+            p0 = theta_1(x,0) - theta_2(x,0);
+            v0 = theta_1(x,0) + theta_2(x,0);
             u0 = [p0 v0];
 
             [t, u] = RK4(M, u0, [0, t_end], alpha*h);
