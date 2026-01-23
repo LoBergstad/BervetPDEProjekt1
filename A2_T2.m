@@ -8,9 +8,11 @@ t_end = 5;
 
 rho_1 = 1;
 c_1 = 1;
+beta_1 = 0;
 
 rho_2 = 2;
 c_2 = 2;
+beta_2 = 10;
 
 r_s = 0.1;
 x_l = -4;
@@ -49,8 +51,20 @@ C_2 = [(1/(rho_2*c_2^2))*ones(m, 1); rho_2*ones(m, 1)];
 
 C = diag(is_wall .* C_2 + (~is_wall) .* C_1);
 
+D_1 = [beta_1*ones(m, 1); zeros(m, 1)];
+D_2 = [beta_2*ones(m, 1); zeros(m, 1)];
+
+D = diag(is_wall .* D_2 + (~is_wall) .* D_1);
+
+
 % Derivator % Integrator
-[H, ~, Dp, Dm, ~, ~] = SBP7_Upwind(m, h);
+%Kolla för ordning 7
+%[H, ~, Dp, Dm, ~, ~] = SBP7_Upwind(m, h);
+%Kolla för ordning 6
+[H, ~, D1, ~, ~, ~] = SBP6(m, h);
+Dp = D1;
+Dm = D1;
+
 D_x = [zeros(m), Dp; Dm, zeros(m)]; 
 H_bar = kron(eye(2), H)*C;
 
@@ -58,7 +72,7 @@ H_bar = kron(eye(2), H)*C;
 % Characteristic BC
 L = [kron(e1 + c_1*e2, e_1');   kron(e1 - c_1*e2, e_m')];
 P = eye(2*m) - H_bar\L.' / (L/H_bar * L.')*L;
-M = -P/C*(D_x)*P;
+M = -P/C*(D_x+D)*P;
 
 % Initial Values
 p0 = theta_1(x,0);% - theta_2(x,0);
@@ -70,7 +84,7 @@ u0 = [p0 v0];
 
 %% Plotta
 ymin = -1;
-ymax = 2;
+ymax = 1.5;
 
 figure;
 ylim([ymin ymax]);
