@@ -54,8 +54,8 @@ for order = [6, 7]
           
             
             % Characteristic BC
-            L = [kron(e1 + c1*e2, e_1'); 
-                kron(e1 - c1*e2, e_m')];
+            L = [kron(e1 + c_1*e2, e_1'); 
+                kron(e1 - c_2*e2, e_m')];
             P = eye(2*m) - H_bar\L.' / (L/H_bar * L.')*L;
             M = -P/C*(D_x)*P;
             
